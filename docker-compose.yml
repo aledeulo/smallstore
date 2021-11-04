@@ -1,0 +1,23 @@
+version: '2'
+
+services:
+  sales_force_app:
+    image: 'sales_force_app:latest'
+    ports:
+      - 8086:8086
+    build:
+      context: .
+    container_name: sales_force_app
+    depends_on:
+      - db
+    env_file:
+      - .app_env
+
+  db:
+    image: 'postgres:10-alpine'
+    container_name: psql_sales_force_container
+    env_file:
+      - .env
+    ports:
+      - 54321:5432
+    hostname: "localhost"
