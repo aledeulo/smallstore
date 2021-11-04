@@ -1,0 +1,2 @@
+# smallstore
+Springboot, Thymeleaf
