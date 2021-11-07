@@ -1,13 +1,12 @@
 package com.salesforce.smallstore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -18,8 +17,9 @@ import java.util.List;
 @Data
 @Builder
 public class Order extends AbstractModel {
-    @Column(name = "account", nullable = false)
-    Account account;
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    Account accountId;
 
     @Column(name = "status", nullable = false)
     OrderStatus status;
@@ -27,6 +27,7 @@ public class Order extends AbstractModel {
     @Column(name = "billing", nullable = false)
     BigDecimal billing;
 
-    @Column(name = "order_products", nullable = false)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @OneToMany(mappedBy = "orderId", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     List<OrderProducts> orderProducts;
 }

@@ -5,9 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @EqualsAndHashCode(callSuper = true)
@@ -17,8 +15,9 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class OrderProducts extends AbstractModel {
-    @Column(name = "order", nullable = false)
-    Order order;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    Order orderId;
 
     @Column(name = "product", nullable = false)
     Product product;

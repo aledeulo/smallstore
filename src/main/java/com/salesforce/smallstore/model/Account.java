@@ -6,9 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -22,6 +20,7 @@ public class Account extends AbstractModel {
     @Column(name = "name", nullable = false)
     String name;
 
-    @Column(name = "orders")
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @OneToMany(mappedBy = "accountId", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     List<Order> orders;
 }
