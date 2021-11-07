@@ -1,4 +1,4 @@
-SPRING_DATASOURCE_URL=jdbc:postgresql://psql-psql_sales_force_container:${POSTGRES_PORT}/${POSTGRES_DB}?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
-SPRING_DATASOURCE_USERNAME=POSTGRES_DB_USERNAME
-SPRING_DATASOURCE_PASSWORD=POSTGRES_DB_PASSWORD
+SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/salesforcedb?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
+SPRING_DATASOURCE_USERNAME=salesforce
+SPRING_DATASOURCE_PASSWORD=salesforce@123
 SPRING_JPA_HIBERNATE_DDL_AUTO=validate
