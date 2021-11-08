@@ -1,26 +1,34 @@
 package com.salesforce.smallstore.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
-@Value
+@Setter
 @Data
 @Entity(name = "account")
 @Table(name = "account")
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true, allowGetters = true, allowSetters = true)
-public class Account extends AbstractModel {
+public class Account extends AuditModel {
+
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @Column(name = "uuid", nullable = false, unique = true)
+    String uuid;
+
     @Column(name = "name", nullable = false)
     String name;
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @OneToMany(mappedBy = "accountId", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    List<Order> orders;
+    public Account() {
+    }
+
+    public Account(String uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
+    }
 }

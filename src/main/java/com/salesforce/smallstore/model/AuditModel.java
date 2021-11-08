@@ -7,28 +7,34 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(
         value = {"createdAt", "updatedAt"},
-        allowGetters = true
+        allowGetters = true,
+        allowSetters = true
 )
 @Data
-public class AbstractModel {
-    @Id
-    @GeneratedValue
-    @Column(name = "uuid", length = 36, nullable = false, unique = true)
-    protected String uuid;
+public class AuditModel {
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
-    protected Date createdAt;
+    protected Timestamp createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at", nullable = false)
     @LastModifiedDate
-    protected Date updatedAt;
+    protected Timestamp updatedAt;
+
+    @PrePersist
+    public void createdAt() {
+        this.createdAt = this.updatedAt = Timestamp.from(Instant.now());
+    }
+
+    @PreUpdate
+    public void updatedAt() {
+        this.updatedAt = Timestamp.from(Instant.now());
+    }
 }

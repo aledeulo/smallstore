@@ -1,33 +1,46 @@
 package com.salesforce.smallstore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
-@Entity(name = "order")
-@Table(name = "order")
-@Value
+@Entity(name = "orders")
+@Table(name = "orders")
+@Setter
 @Data
 @Builder
-public class Order extends AbstractModel {
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    Account accountId;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Order extends AuditModel {
+
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @Column(name = "uuid", nullable = false, unique = true)
+    String uuid;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "account_id", nullable = false)
+    @JsonIgnore
+    Account account;
 
     @Column(name = "status", nullable = false)
     OrderStatus status;
 
-    @Column(name = "billing", nullable = false)
+    @Column(name = "billing", precision = 18, scale = 6, nullable = false)
     BigDecimal billing;
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @OneToMany(mappedBy = "orderId", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    List<OrderProducts> orderProducts;
+    public Order() {
+    }
+
+    public Order(String uuid, Account account, OrderStatus status, BigDecimal billing) {
+        this.uuid = uuid;
+        this.account = account;
+        this.status = status;
+        this.billing = billing;
+    }
 }

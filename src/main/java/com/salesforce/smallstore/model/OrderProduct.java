@@ -6,15 +6,16 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @EqualsAndHashCode(callSuper = true)
+@Entity(name = "order_products")
+@Table(name = "order_products")
 @Setter
 @Data
-@Entity(name = "product_image")
-@Table(name = "product_image")
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProductImage extends AuditModel {
+public class OrderProduct extends AuditModel {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -22,14 +23,18 @@ public class ProductImage extends AuditModel {
     @Column(name = "uuid", nullable = false, unique = true)
     String uuid;
 
-    @Column(name = "name", nullable = false)
-    String name;
-
-    @Column(name = "image_bytes", length = 1000, nullable = false)
-    byte[] imageBytes;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "order_id", nullable = false)
     @JsonIgnore
+    Order order;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id", referencedColumnName = "uuid")
     Product product;
+
+    @Column(name = "quantity", nullable = false)
+    int quantity;
+
+    @Column(name = "amount", nullable = false)
+    BigDecimal amount;
 }

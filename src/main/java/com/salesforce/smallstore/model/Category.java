@@ -1,20 +1,20 @@
 package com.salesforce.smallstore.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Setter
 @Data
-@Entity(name = "product_image")
-@Table(name = "product_image")
 @Builder
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ProductImage extends AuditModel {
+@JsonIgnoreProperties(ignoreUnknown = true, allowGetters = true, allowSetters = true)
+@Entity(name = "categories")
+@Table(name = "categories")
+public class Category extends AuditModel {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -25,11 +25,9 @@ public class ProductImage extends AuditModel {
     @Column(name = "name", nullable = false)
     String name;
 
-    @Column(name = "image_bytes", length = 1000, nullable = false)
-    byte[] imageBytes;
+    @Column(name = "description")
+    String description;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
-    @JsonIgnore
-    Product product;
+    @ManyToMany(mappedBy = "categories")
+    Set<Product> products;
 }
